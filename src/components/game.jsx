@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react"
+import Question from "./question"
 
 export default function Game(){
-    const [questions,setQuestions] = useState(null)
-    console.log(questions)
+    const [questions,setQuestions] = useState([])
+
+    function answerQuestion(question, answer){
+        setQuestions(prevQuestions =>{
+            const newQuestions = [...prevQuestions]
+            newQuestions[question]={...newQuestions[question],selection:answer}
+            return newQuestions
+        })
+    }
 
     useEffect(()=>{
         fetch("https://opentdb.com/api.php?amount=5&category=27&difficulty=easy&type=multiple")
@@ -11,9 +19,28 @@ export default function Game(){
         .catch(error=> console.error("Fetch error: " ,error))
     },[])
 
+    console.log(questions)
+
+    let questionList = []
+
+    if(questions){
+        questionList = questions.map((question,index) => {
+
+            return(
+    <Question
+            key={index}
+            id={index}
+            question={question.question} 
+            answers={[question.correct_answer].concat(question.incorrect_answers)}
+            answerQuestion={answerQuestion}
+            selection={question.selection}
+    
+    />) ;
+    })} 
+
     return(
-        <main>
-            <h1>Game</h1>
+        <main className="game">
+            {questions ? questionList : null}
         </main>
 )
 }

@@ -1,3 +1,6 @@
+* {
+  box-sizing: border-box;
+}
 body {
   margin: 0;
   font-size: 32px;
@@ -5,11 +8,7 @@ body {
   font-family: "Karla", "Inter", sans-serif;
 }
 main {
-  display: flex;
   gap: 1em;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   width: 100vw;
   max-width: 100vw;
   overflow: hidden;
@@ -18,6 +17,16 @@ main {
   background-repeat: no-repeat;
   background-size: cover;
 }
+.content-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.game {
+  padding: 64px 128px;
+}
+
 h1 {
   font-weight: bold;
   margin: 0;
@@ -26,16 +35,44 @@ p {
   margin: 0;
 }
 button {
-  background-color: #4d5b9e;
-  color: #f5f7fb;
   border-radius: 0.5em;
   padding: 0.5em 1em;
-  font-weight: 600;
-  font-size: 1.25em;
-  border: none;
+  font-weight: 700;
+  font-size: 0.625em;
   cursor: pointer;
+  border: none;
+  background-color: transparent;
 }
-button:hover {
+.btn-intro {
+  background-color: #4d5b9e;
+  color: #f5f7fb;
+  font-size: 1.25em;
+}
+.btn-intro:hover {
   background-color: #3b4577;
   box-shadow: 2px 4px 2px rgba(0, 0, 0, 0.1);
+}
+.btn-answer {
+  color: #4d5b9e;
+  border: 0.125em solid #4d5b9e;
+  margin-right: 1em;
+}
+.btn-answer:hover {
+  background-color: #d6dbf5;
+  border-color: transparent;
+}
+.btn-selected {
+  background-color: #d6dbf5;
+  border: none;
+  color: #4d5b9e;
+  margin-right: 1em;
+}
+
+.question {
+  border-bottom: 1px solid #dbdef0;
+  padding: 1em 0;
+}
+.question p {
+  font-weight: bold;
+  margin-bottom: 0.75em;
 }
