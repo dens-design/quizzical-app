@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import Question from "./question"
+import { shuffle } from "lodash"
 
 export default function Game(){
     const [questions,setQuestions] = useState([])
@@ -23,15 +24,26 @@ export default function Game(){
 
     let questionList = []
 
+
     if(questions){
         questionList = questions.map((question,index) => {
+        const answers = [{answer: question.correct_answer, isCorrect:true}]
+        question.incorrect_answers.forEach(answer => {
+            answers.push({answer: answer, isCorrect: false})            
+        });
+        const shuffledAnswers = shuffle(answers)
+
+
+
+        //answer,0
+
 
             return(
     <Question
             key={index}
             id={index}
             question={question.question} 
-            answers={[question.correct_answer].concat(question.incorrect_answers)}
+            answers={shuffledAnswers}
             answerQuestion={answerQuestion}
             selection={question.selection}
     

@@ -63,7 +63,7 @@ button {
 }
 .btn-selected {
   background-color: #d6dbf5;
-  border: none;
+  border-color: transparent;
   color: #4d5b9e;
   margin-right: 1em;
 }

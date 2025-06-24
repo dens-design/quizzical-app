@@ -5,10 +5,11 @@ export default function Question(props){
 
     <button
     key={index}
+    iscorrect={""+answer.isCorrect}
     onClick={()=>{props.answerQuestion(props.id,index)}}
-    className={(props.selection || props.selection===0  ) && props.selection === index ? "btn-answer btn-selected":"btn-answer" }
+    className={(props.selection || props.selection===0  ) && props.selection === index ? "btn-answer btn-selected":"btn-answer "+answer.isCorrect }
 
-    >{answer}</button>)
+    >{answer.answer}</button>)
 
     return(
         <div className="question">
