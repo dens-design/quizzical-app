@@ -24,13 +24,15 @@ export default function Game(){
 
     let questionList = []
 
-
+    //it would probably be better to keep track of the correct answers index in state
     if(questions){
         questionList = questions.map((question,index) => {
         const answers = [{answer: question.correct_answer, isCorrect:true}]
         question.incorrect_answers.forEach(answer => {
             answers.push({answer: answer, isCorrect: false})            
         });
+
+        //Problem: Mixes the answers on every rerender
         const shuffledAnswers = shuffle(answers)
 
 
