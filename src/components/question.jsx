@@ -8,11 +8,10 @@ export default function Question(props){
 
     <button
     key={index}
-    iscorrect={""+answer.isCorrect}
     onClick={()=>{props.answerQuestion(props.id,index)}}
     className={(props.selection || props.selection===0  ) && props.selection === index ? "btn-answer btn-selected":"btn-answer "}
 
-    >{decode(answer.answer)}</button>)
+    >{decode(answer)}</button>)
 
     return(
         <div className="question">
