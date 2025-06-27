@@ -3,10 +3,11 @@ import Question from "./question"
 
 export default function Game(){
     const [questions,setQuestions] = useState([])
+    const [result,setResult] = useState(null)
 
     console.log(questions)
-
-
+    
+    const isAllAnswered = questions.every(question => question.selection>=0)
 
     const questionList = questions.map((question,index) => {
 
@@ -57,14 +58,15 @@ export default function Game(){
 
     function checkAnswers(){
         //Compare selection to correct id for each question
-
+        setResult(questions.filter(question => question.selection === question.correctId).length)
     }
 
     return(
         <main className="game">
             {questionList}
             {/* Check if all questions have been answered before displaying*/}
-            <button onClick={checkAnswers}>Check Answers</button>
+            {isAllAnswered ? (<button onClick={checkAnswers}>Check Answers</button>):null}
+            {result!=null ? `${result} out of 5 questions answers correct`:null}
         </main>
 )
 }
