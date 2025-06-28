@@ -63,10 +63,17 @@ export default function Game(){
 
     return(
         <main className="game">
+            <div className="container">
             {questionList}
-            {/* Check if all questions have been answered before displaying*/}
-            {isAllAnswered ? (<button onClick={checkAnswers}>Check Answers</button>):null}
-            {result!=null ? `${result} out of 5 questions answers correct`:null}
+            {isAllAnswered&&result===null ? (<button onClick={checkAnswers} className="btn-game">Check Answers</button>):null}
+            {result!=null
+            ? ( <section className="flex-center">
+                    <p>{`You scored ${result}/5 correct answers`}</p>
+                    <button className="btn-game">Play again</button>
+                </section>
+                )
+            : null}
+            </div>
         </main>
 )
 }
