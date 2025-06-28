@@ -10,10 +10,10 @@ export default function Question(props){
     if(props.reveal){
         if(props.correctId === index) classString += "btn-correct"
         else if(props.selection=== index) classString += "btn-wrong"
-        else classString+="btn-neutral"
+        else classString+="btn-disabled"
         }
     else{
-        (props.selection || props.selection===0  ) && props.selection === index ? classString+=" btn-selected": null
+        (props.selection || props.selection===0  ) && props.selection === index ? classString+="btn-selected": classString+="btn-neutral"
     }
     
 

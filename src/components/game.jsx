@@ -38,7 +38,7 @@ export default function Game(){
     useEffect(()=>{
         if(!session) return
 
-        fetch(`https://opentdb.com/api.php?amount=5&difficulty=easy&type=multiple&token=${session}`)
+        fetch(`https://opentdb.com/api.php?amount=5&category=9&difficulty=easy&type=multiple&token=${session}`)
         .then (response => response.json())
         .then (data => createQuestionList(data.results))
         .catch(error=> console.error("Fetch error: " ,error))
