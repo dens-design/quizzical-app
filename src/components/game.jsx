@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
 import Question from "./question"
+import { uniqueId } from "lodash"
 
 export default function Game(){
     const [questions,setQuestions] = useState([])
     const [result,setResult] = useState(null)
+    const [gameId,setGameId] = useState(uniqueId())
+    const [session,setSession] = useState(null)
 
     console.log(questions)
     
@@ -22,13 +25,22 @@ export default function Game(){
     
         />) ;
     });
+    useEffect(()=>{
+        if(!session){
+        fetch("https://opentdb.com/api_token.php?command=request")
+        .then(response=>response.json())
+        .then(data=>setSession(data.token))
+        .catch(error=>console.error("Fetch error: ", error))}
+    },[])
 
     useEffect(()=>{
-        fetch("https://opentdb.com/api.php?amount=5&category=27&difficulty=easy&type=multiple")
+        if(!session) return
+
+        fetch(`https://opentdb.com/api.php?amount=5&difficulty=easy&type=multiple&token=${session}`)
         .then (response => response.json())
         .then (data => createQuestionList(data.results))
         .catch(error=> console.error("Fetch error: " ,error))
-    },[])
+    },[gameId,session])
 
 
 
@@ -54,6 +66,11 @@ export default function Game(){
         console.log(questions)
     }
 
+    function newGame(){
+        setResult(null)
+        setGameId(uniqueId())
+    }
+
 
 
     function checkAnswers(){
@@ -69,7 +86,7 @@ export default function Game(){
             {result!=null
             ? ( <section className="flex-center">
                     <p>{`You scored ${result}/5 correct answers`}</p>
-                    <button className="btn-game">Play again</button>
+                    <button className="btn-game" onClick={newGame}>Play again</button>
                 </section>
                 )
             : null}
