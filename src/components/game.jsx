@@ -22,6 +22,8 @@ export default function Game(){
             answers={question.answers}
             answerQuestion={answerQuestion}
             selection={question.selection}
+            correctId={question.correctId}
+            reveal={result===null ? false : true}
     
         />) ;
     });

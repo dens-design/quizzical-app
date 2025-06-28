@@ -1,17 +1,31 @@
 import { decode } from "html-entities"
 
 export default function Question(props){
-    const answers = props.answers.map((answer,index )=>
+    
+    const answers = props.answers.map((answer,index )=> {
+
+    let classString="btn-answer "
+
+
+    if(props.reveal){
+        if(props.correctId === index) classString += "btn-correct"
+        else if(props.selection=== index) classString += "btn-wrong"
+        else classString+="btn-neutral"
+        }
+    else{
+        (props.selection || props.selection===0  ) && props.selection === index ? classString+=" btn-selected": null
+    }
+    
 
     
     
-
+    return(
     <button
     key={index}
     onClick={()=>{props.answerQuestion(props.id,index)}}
-    className={(props.selection || props.selection===0  ) && props.selection === index ? "btn-answer btn-selected":"btn-answer "}
+    className={classString}
 
-    >{decode(answer)}</button>)
+    >{decode(answer)}</button>)})
 
     return(
         <div className="question">
