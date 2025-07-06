@@ -1,14 +1,25 @@
 import { useEffect, useState } from "react"
 import Question from "./question"
-import { uniqueId } from "lodash"
+
+const generateId = () => Math.random().toString(36).substr(2, 10)
+
+
+const API_CONFIG = {
+    baseUrl: 'https://opentdb.com',
+    questionCount: 5,
+    category: 9, // General Knowledge
+    difficulty: 'easy',
+    type: 'multiple'
+}
 
 export default function Game(){
     const [questions,setQuestions] = useState([])
     const [result,setResult] = useState(null)
-    const [gameId,setGameId] = useState(uniqueId())
+    const [gameId,setGameId] = useState(generateId())
     const [session,setSession] = useState(null)
+    const [loading,setLoading] = useState(false)
 
-    console.log(questions)
+    
     
     const isAllAnswered = questions.every(question => question.selection>=0)
 
@@ -29,7 +40,8 @@ export default function Game(){
     });
     useEffect(()=>{
         if(!session){
-        fetch("https://opentdb.com/api_token.php?command=request")
+        setLoading(true)
+        fetch(`${API_CONFIG.baseUrl}/api_token.php?command=request`)
         .then(response=>response.json())
         .then(data=>setSession(data.token))
         .catch(error=>console.error("Fetch error: ", error))}
@@ -37,11 +49,13 @@ export default function Game(){
 
     useEffect(()=>{
         if(!session) return
+        setLoading(true)
 
-        fetch(`https://opentdb.com/api.php?amount=5&category=9&difficulty=easy&type=multiple&token=${session}`)
+        fetch(`${API_CONFIG.baseUrl}/api.php?amount=${API_CONFIG.questionCount}&category=${API_CONFIG.category}&difficulty=${API_CONFIG.difficulty}&type=${API_CONFIG.type}&token=${session}`)
         .then (response => response.json())
         .then (data => createQuestionList(data.results))
         .catch(error=> console.error("Fetch error: " ,error))
+        .finally(()=>setLoading(false))
     },[gameId,session])
 
 
@@ -55,39 +69,62 @@ export default function Game(){
     }
 
     function createQuestionList(data){
-        let questionList = data;
-        
-        questionList.forEach((question,index) => {
-            const rand = Math.floor(Math.random()*4)
-            question.answers = question.incorrect_answers;
-            question.answers.splice(rand,0,question.correct_answer)
-            question.correctId = rand;
+        const processedQuestions = data.map(question => {
+            // Combine all answers and shuffle them
+            const allAnswers = [...question.incorrect_answers, question.correct_answer]
+            const shuffledAnswers = [...allAnswers] // Create a copy to avoid mutating
+            
+            // Fisher-Yates shuffle for truly random ordering
+            for (let i = shuffledAnswers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1))
+                ;[shuffledAnswers[i], shuffledAnswers[j]] = [shuffledAnswers[j], shuffledAnswers[i]]
+            }
+            
+            // Find the position of the correct answer after shuffling
+            const correctId = shuffledAnswers.indexOf(question.correct_answer)
+            
+            return {
+                question: question.question,
+                answers: shuffledAnswers,
+                correctId,
+                selection: -1
+            }
         })
 
-        setQuestions(questionList);
-        console.log(questions)
+        setQuestions(processedQuestions)
     }
 
     function newGame(){
         setResult(null)
-        setGameId(uniqueId())
+        setGameId(generateId())
     }
 
 
 
     function checkAnswers(){
-        //Compare selection to correct id for each question
         setResult(questions.filter(question => question.selection === question.correctId).length)
+    }
+
+    if (loading) {
+        return (
+            <main className="game">
+                <div className="container">
+                    <div className="loading-container">
+                        <div className="spinner"></div>
+                    </div>
+                </div>
+            </main>
+        )
     }
 
     return(
         <main className="game">
             <div className="container">
             {questionList}
-            {isAllAnswered&&result===null ? (<button onClick={checkAnswers} className="btn-game">Check Answers</button>):null}
+            {questions.length > 0 && isAllAnswered && result === null ? (<button onClick={checkAnswers} className="btn-game">Check Answers</button>):null}
             {result!=null
             ? ( <section className="flex-center">
-                    <p>{`You scored ${result}/5 correct answers`}</p>
+                    <p>{`You scored ${result}/${API_CONFIG.questionCount} correct answers`}</p>
                     <button className="btn-game" onClick={newGame}>Play again</button>
                 </section>
                 )
