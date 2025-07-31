@@ -1,18 +1,28 @@
 import { useState } from 'react'
 import Game from "./components/game"
 import Intro from "./components/intro"
-
+import Highscores from "./components/highscores"
 
 function App() {
-  const [gameRunning, setGameRunning] = useState(false)
+  const [currentPage, setCurrentPage] = useState('intro') // 'intro', 'game', 'highscores'
   
   function startGame(){
-    setGameRunning(true)
+    setCurrentPage('game')
+  }
+
+  function showHighscores(){
+    setCurrentPage('highscores')
+  }
+
+  function goBack(){
+    setCurrentPage('intro')
   }
 
   return (
     <>
-    {gameRunning ? <Game/> : <Intro startGame={startGame}/>}
+      {currentPage === 'game' && <Game/>}
+      {currentPage === 'intro' && <Intro startGame={startGame} showHighscores={showHighscores}/>}
+      {currentPage === 'highscores' && <Highscores goBack={goBack}/>}
     </>
   )
 }

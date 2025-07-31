@@ -3,14 +3,10 @@ import Question from "./question"
 
 const generateId = () => Math.random().toString(36).substr(2, 10)
 
-
-const API_CONFIG = {
-    baseUrl: 'https://opentdb.com',
-    questionCount: 5,
-    category: 9, // General Knowledge
-    difficulty: 'easy',
-    type: 'multiple'
-}
+// 1. Autocomplete
+// 2. IDE integrierter AI Chat bei Fragen zu Doku o. konzeptionellem Konzeption
+// 3. Context-basiertes Chatten 
+// 4. Vibe-Coding / Context-Engineering
 
 export default function Game(){
     const [questions,setQuestions] = useState([])
@@ -18,6 +14,14 @@ export default function Game(){
     const [gameId,setGameId] = useState(generateId())
     const [session,setSession] = useState(null)
     const [loading,setLoading] = useState(false)
+
+    const API_CONFIG = {
+        baseUrl: 'https://opentdb.com',
+        questionCount: 5,
+        category: 9, // General Knowledge
+        difficulty: 'easy',
+        type: 'multiple'
+    }
 
     
     
